@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
+// Import your JSON data directly
+import questionsData from "../data/questions.json";
 
 const initialState = {
   questions: [],
@@ -98,17 +100,30 @@ function QuizProvider({ children }) {
   );
 
   useEffect(function () {
-    fetch("/data/questions")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => dispatch({ type: "dataReceived", payload: data }))
-      .catch((error) =>
-        dispatch({ type: "dataFailed", payload: error.message })
-      );
+    // Simulate async loading to keep the same flow
+    const loadQuestions = async () => {
+      try {
+        // Simulate a small delay like a real fetch
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        dispatch({ type: "dataReceived", payload: questionsData.questions });
+      } catch (error) {
+        dispatch({ type: "dataFailed", payload: error.message });
+      }
+    };
+
+    loadQuestions();
+
+    // fetch("/data/questions")
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => dispatch({ type: "dataReceived", payload: data }))
+    //   .catch((error) =>
+    //     dispatch({ type: "dataFailed", payload: error.message })
+    //   );
   }, []);
 
   return (
